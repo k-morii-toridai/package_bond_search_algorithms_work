@@ -146,17 +146,19 @@ def filter_6(df_nnlist, dict_3):
     """
     bool_list_6 = []
     for k, v in dict_3.items():
-        df_nnlist.iloc[dict_3[k]].sort_values(by='rel_distance')
         # C周りのO３つのindex
         indices = df_nnlist.iloc[dict_3[k]].sort_values(by='rel_distance').index[1:4]
         O_ids = df_nnlist.iloc[indices].apply(lambda row: row['neighboring_atom_id'], axis=1).tolist()
+        bool_list_temp = []
         for O_id in O_ids:
-            bool_list_temp = []
-            bool_list_temp.append(df_nnlist[df_nnlist['central_atom_id'] == O_id].sort_values('rel_distance')['neighboring_atom_symbol'].tolist()[1] == 'C')
+            bool_temp = df_nnlist[df_nnlist['central_atom_id'] == O_id].sort_values('rel_distance')['neighboring_atom_symbol'].tolist()[1] == 'C'
+            bool_list_temp.append(bool_temp)
         if set(bool_list_temp) == {True}:
             bool_list_6.append(True)
+        else:
+            bool_list_6.append(False)
     C_ids = np.array(list(dict_3.keys()))[bool_list_6]
-    bool_filter_6 = len(bool_list_6) >= 1
+    bool_filter_6 = bool_list_6.count(True) >= 1
 
     return bool_filter_6, C_ids
 
@@ -192,6 +194,8 @@ def concat_filter(df_nnlist):
                     bool_6, C_ids = filter_6(df_nnlist=df_nnlist, dict_3=dict_3)
                     if bool_6:
                         return True
+                    else:
+                        return False
                 else:
                     return False
         else:
