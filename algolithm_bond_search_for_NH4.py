@@ -1,5 +1,4 @@
 import numpy as np
-from package_file_conversion.nnlist2df import nnlist2df
 
 
 def filter_2(df_nnlist):
@@ -207,6 +206,7 @@ def concat_filter(df_nnlist):
 
 
 if __name__ == '__main__':
+    from package_file_conversion.nnlist2df import nnlist2df
     nnlist_path = 'sample_test_files/1000033/nnlist_5/POSCAR.nnlist'
     df_nnlist = nnlist2df(nnlist_path=nnlist_path)
     print(f"concat_filter(df_nnlist=df_nnlist): {concat_filter(df_nnlist=df_nnlist)}")
