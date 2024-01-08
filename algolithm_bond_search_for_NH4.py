@@ -24,7 +24,7 @@ def filter_2(df_nnlist):
     df_nnlist_central_atom_ids = np.array(list(df_nnlist_group_dict.keys()))
     bool_list = []
     for key in df_nnlist_central_atom_ids:
-        bool_sort_dist_list = df_nnlist.iloc[df_nnlist_group_dict[key]].sort_values('rel_distance')['rel_distance'] < 1.1
+        bool_sort_dist_list = df_nnlist.iloc[df_nnlist_group_dict[key]].sort_values('rel_distance')['rel_distance'] < 1.2
         bool_list.append(df_nnlist.iloc[df_nnlist_group_dict[key]].sort_values('rel_distance')[bool_sort_dist_list]['neighboring_atom_symbol'].tolist().count('H') >= 4)
     df_nnlist_central_atom_ids_fillterd = df_nnlist_central_atom_ids[bool_list]
     bool_filter_2 = len(df_nnlist_central_atom_ids_fillterd) >= 1
