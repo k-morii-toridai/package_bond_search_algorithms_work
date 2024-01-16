@@ -20,11 +20,11 @@ def filter_2(df_nnlist):
     bool_2: bool
     dict_2: dict
     """
-    df_nnlist_group_dict = df_nnlist[df_nnlist['central_atom_symbol'] == 'Cl'].groupby('central_atom_id').groups
+    df_nnlist_group_dict = df_nnlist[df_nnlist['central_atom_symbol'] == 'Mn'].groupby('central_atom_id').groups
     df_nnlist_central_atom_ids = np.array(list(df_nnlist_group_dict.keys()))
     bool_list = []
     for key in df_nnlist_central_atom_ids:
-        bool_sort_dist_list = df_nnlist.iloc[df_nnlist_group_dict[key]].sort_values('rel_distance')['rel_distance'] < 2.0
+        bool_sort_dist_list = df_nnlist.iloc[df_nnlist_group_dict[key]].sort_values('rel_distance')['rel_distance'] < 2.8
         # bool_list.append(df_nnlist.iloc[df_nnlist_group_dict[key]].sort_values('rel_distance')[bool_sort_dist]['neighboring_atom_symbol'].tolist().count('O') >= 4)
         bool_list.append(df_nnlist.iloc[df_nnlist_group_dict[key]].sort_values('rel_distance')[bool_sort_dist_list]['neighboring_atom_symbol'].tolist().count('O') == 4)
     df_nnlist_central_atom_ids_fillterd = df_nnlist_central_atom_ids[bool_list]
@@ -116,9 +116,9 @@ def filter_5(df_nnlist, dict_3):
     """
     bool_list_5 = []
     for k, v in dict_3.items():
-        fourth_NH_bond_dist = df_nnlist.iloc[dict_3[k]].sort_values(by='rel_distance')['rel_distance'].tolist()[4]
+        fourth_bond_dist = df_nnlist.iloc[dict_3[k]].sort_values(by='rel_distance')['rel_distance'].tolist()[4]
         fifth_dist = df_nnlist.iloc[dict_3[k]].sort_values(by='rel_distance')['rel_distance'].tolist()[5]
-        bool_list_5.append(fourth_NH_bond_dist < fifth_dist)
+        bool_list_5.append(fourth_bond_dist < fifth_dist)
     df_nnlist_central_atom_ids_fillterd_5 = np.array(list(dict_3.keys()))[bool_list_5]
     filtered_5_df_nnlist_group_dict = {key: dict_3[key] for key in dict_3.keys() if key in df_nnlist_central_atom_ids_fillterd_5}
     bool_filter_5 = len(df_nnlist_central_atom_ids_fillterd_5) >= 1
@@ -153,7 +153,7 @@ def filter_6(df_nnlist, dict_3):
         H_ids = df_nnlist.iloc[indices].apply(lambda row: row['neighboring_atom_id'], axis=1).tolist()
         bool_list_temp = []
         for H_id in H_ids:
-            bool_temp = df_nnlist[df_nnlist['central_atom_id'] == H_id].sort_values('rel_distance')['neighboring_atom_symbol'].tolist()[1] == 'Cl'
+            bool_temp = df_nnlist[df_nnlist['central_atom_id'] == H_id].sort_values('rel_distance')['neighboring_atom_symbol'].tolist()[1] == 'Mn'
             bool_list_temp.append(bool_temp)
         if set(bool_list_temp) == {True}:
             bool_list_6.append(True)
