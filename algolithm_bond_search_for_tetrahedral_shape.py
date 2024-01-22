@@ -197,7 +197,7 @@ def concat_filter(df_nnlist, central_atom_symbol, neighboring_atom_symbol, bond_
     """
     bool_2, dict_2 = filter_2(df_nnlist, central_atom_symbol, neighboring_atom_symbol, bond_length_lower_end, bond_length_upper_end)
     if bool_2:
-        bool_3, dict_3 = filter_3(df_nnlist=df_nnlist, dict_2=dict_2)
+        bool_3, dict_3 = filter_3(df_nnlist=df_nnlist, dict_2=dict_2, neighboring_atom_symbol=neighboring_atom_symbol)
         if bool_3:
             bool_4, dict_4 = filter_4(df_nnlist=df_nnlist, dict_3=dict_3)
             if bool_4:
