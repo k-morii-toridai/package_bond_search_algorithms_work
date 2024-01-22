@@ -47,12 +47,13 @@ def filter_3(df_nnlist, dict_2, neighboring_atom_symbol):
 
     Usage:
     ------
-    bool_3, dict_3 = filter_3(df_nnlist=df_nnlist, dict_2=dict_2)
+    bool_3, dict_3 = filter_3(df_nnlist=df_nnlist, dict_2=dict_2, neighboring_atom_symbol=neighboring_atom_symbol)
 
     Parameters:
     -----------
     df_nnlist: pd.DataFrame
     dict_2: dict
+    neighboring_atom_symbol: str
 
     Returns:
     --------
@@ -140,12 +141,13 @@ def filter_6(df_nnlist, dict_3, central_atom_symbol):
 
     Usage:
     ------
-    bool_6, N_ids = filter_6(df_nnlist=df_nnlist, dict_3=dict_3)
+    bool_6, N_ids = filter_6(df_nnlist=df_nnlist, dict_3=dict_3, central_atom_symbol=central_atom_symbol)
 
     Parameters:
     -----------
     df_nnlist: pd.DataFrame
     dict_3: dict
+    central_atom_symbol: str
 
     Returns:
     --------
@@ -188,8 +190,10 @@ def concat_filter(df_nnlist, central_atom_symbol, neighboring_atom_symbol, bond_
     Parameters:
     -----------
     df_nnlist: pd.DataFrame
-    bond_length_lower_end: float or int
-    bond_length_upper_end: float or int
+    central_atom_symbol: str: ex.) 'N'
+    neighboring_atom_symbol: str: ex.) 'H'
+    bond_length_lower_end: float or int: ex.) 0.82 ← Unit is Å
+    bond_length_upper_end: float or int: ex.) 1.24 ← Unit is Å
 
     Returns:
     --------
@@ -205,7 +209,7 @@ def concat_filter(df_nnlist, central_atom_symbol, neighboring_atom_symbol, bond_
             else:
                 bool_5, dict_5 = filter_5(df_nnlist=df_nnlist, dict_3=dict_3)
                 if bool_5:
-                    bool_6, N_ids = filter_6(df_nnlist=df_nnlist, dict_3=dict_3)
+                    bool_6, N_ids = filter_6(df_nnlist=df_nnlist, dict_3=dict_3, central_atom_symbol=central_atom_symbol)
                     if bool_6:
                         return True
                     else:
