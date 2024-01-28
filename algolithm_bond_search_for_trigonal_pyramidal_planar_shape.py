@@ -3,14 +3,13 @@ import numpy as np
 
 def filter_2(df_nnlist, central_atom_symbol, neighboring_atom_symbol, bond_length_lower_end, bond_length_upper_end):
     """
-    2．POSCAR.nnlistにおいて，原子'C'から0-2．のNH結合距離以内に，原子'O'を4つ含む，中心原子'C'が存在するかどうか判定．
+    2．POSCAR.nnlistにおいて，原子'C'から0-2．のCO結合距離以内に，原子'O'を3つ含む，中心原子'C'が存在するかどうか判定．
     → 存在する場合、True値，{中心原子'C'の'central_atom_id': そのneighborsの'central_atom_id'}の辞書の2つを返す．
     → 存在しない場合，False値，空の辞書を返す．
 
     Usage:
     ------
-
-    bool_2, dict_2 = filter_2(df_nnlist=df_nnlist, bond_length_lower_end=bond_length_lower_end, bond_length_upper_end=bond_length_upper_end)
+    bool_2, dict_2 = filter_2(df_nnlist, central_atom_symbol, neighboring_atom_symbol, bond_length_lower_end, bond_length_upper_end)
 
     Parameters:
     -----------
@@ -25,6 +24,8 @@ def filter_2(df_nnlist, central_atom_symbol, neighboring_atom_symbol, bond_lengt
     df_nnlist_group_dict = df_nnlist[df_nnlist['central_atom_symbol'] == central_atom_symbol].groupby('central_atom_id').groups
     df_nnlist_central_atom_ids = np.array(list(df_nnlist_group_dict.keys()))
     bool_list = []
+    bond_length_lower_end = float(bond_length_lower_end)
+    bond_length_upper_end = float(bond_length_upper_end)
     for key in df_nnlist_central_atom_ids:
         # bool_sort_dist_list = bond_length_lower_end < df_nnlist.iloc[df_nnlist_group_dict[key]].sort_values('rel_distance')['rel_distance'] < bond_length_upper_end
         bond_length_lower_end_c_eq = bond_length_lower_end < df_nnlist.iloc[df_nnlist_group_dict[key]].sort_values('rel_distance')['rel_distance']
@@ -41,7 +42,7 @@ def filter_2(df_nnlist, central_atom_symbol, neighboring_atom_symbol, bond_lengt
 
 def filter_3(df_nnlist, dict_2, neighboring_atom_symbol):
     """
-    3．2．の中心原子'C'に対して，1番近い原子が'O'であり，かつ2番目・3番目・4番目に近い原子も'O'である，中心原子'C'が存在するかどうか判定．
+    3．2．の中心原子'C'に対して，1番近い原子が'O'であり，かつ2番目・3番目に近い原子も'O'である，中心原子'C'が存在するかどうか判定．
     → 存在する場合，True値，{中心原子Cの'central_atom_id': そのneighborsの'central_atom_id'}の辞書の2つを返す．
     → 存在しない場合，False値，空の辞書を返す．
 
@@ -73,7 +74,7 @@ def filter_3(df_nnlist, dict_2, neighboring_atom_symbol):
 
 def filter_4(df_nnlist, dict_3):
     """
-    4．2．の中心原子'C'に対して5番目に近い原子が存在しないかを判定．
+    4．2．の中心原子'C'に対して4番目に近い原子が存在しないかを判定．
     → 存在しない場合，True値，{中心原子'C'の'central_atom_id': そのneighborsの'central_atom_id'}の辞書の2つを返す．
     → 存在する場合，False値，空の辞書の2つを返す．
 
@@ -103,7 +104,7 @@ def filter_4(df_nnlist, dict_3):
 
 def filter_5(df_nnlist, dict_3):
     """
-    5．2．の中心原子'C'に対して5番目に近い原子が，'C'に4番目に近い原子'O'と'C'のNH距離より大きい'C'が存在するどうかを判定．
+    5．2．の中心原子'C'に対して4番目に近い原子が，'C'に3番目に近い原子'O'と'C'のCO距離より大きい'C'が存在するどうかを判定．
     → 存在する場合，True値，{中心原子'C'の'central_atom_id': そのneighborsの'central_atom_id'}の辞書の2つを返す．
     → 存在しない場合，False値，空の辞書を返す．
 
@@ -135,13 +136,13 @@ def filter_5(df_nnlist, dict_3):
 
 def filter_6(df_nnlist, dict_3, central_atom_symbol):
     """
-    6．3．の4つの原子'O'全てに対して，3．の中心の原子'C'との距離以内に，中心原子'C'以外の別の原子が存在しないかどうかを判定．
+    6．3．の3つの原子'O'全てに対して，3．の中心の原子'C'との距離以内に，中心原子'C'以外の別の原子が存在しないかどうかを判定．
     → 存在しない場合，True値，中心原子'C'の'central_atom_id'のndarrayの2つを返す．
     → 存在する場合，False値，空のndarrayを返す．
 
     Usage:
     ------
-    bool_6, N_ids = filter_6(df_nnlist=df_nnlist, dict_3=dict_3, central_atom_symbol=central_atom_symbol)
+    bool_6, C_ids = filter_6(df_nnlist=df_nnlist, dict_3=dict_3, central_atom_symbol=central_atom_symbol)
 
     Parameters:
     -----------
@@ -152,7 +153,7 @@ def filter_6(df_nnlist, dict_3, central_atom_symbol):
     Returns:
     --------
     bool_6: bool
-    N_ids: ndarray
+    C_ids: ndarray
     """
     bool_list_6 = []
     for k, v in dict_3.items():
@@ -167,17 +168,17 @@ def filter_6(df_nnlist, dict_3, central_atom_symbol):
             bool_list_6.append(True)
         else:
             bool_list_6.append(False)
-    O_ids = np.array(list(dict_3.keys()))[bool_list_6]
+    C_ids = np.array(list(dict_3.keys()))[bool_list_6]
     bool_filter_6 = bool_list_6.count(True) >= 1
 
-    return bool_filter_6, O_ids
+    return bool_filter_6, C_ids
 
 
 def concat_filter(df_nnlist, central_atom_symbol, neighboring_atom_symbol, bond_length_lower_end, bond_length_upper_end):
     """
-    filter_2()~filter_6()の関数を用いて，POSCAR.nnlistを用いて，POSCARファイルにアンモニウムイオンを含むかどうかの判定algolithmを作成．
-    → True値が返された場合，アンモニウムイオンを含む．
-    → False値が返され場合，アンモニウムイオンを含まない．
+    filter_2()~filter_6()の関数を用いて，POSCAR.nnlistを用いて，POSCARファイルに炭酸イオンを含むかどうかの判定algolithmを作成．
+    → True値が返された場合，炭酸イオンを含む．
+    → False値が返され場合，炭酸イオンを含まない．
 
     Usage:
     ------
@@ -205,13 +206,13 @@ def concat_filter(df_nnlist, central_atom_symbol, neighboring_atom_symbol, bond_
         if bool_3:
             bool_4, dict_4 = filter_4(df_nnlist=df_nnlist, dict_3=dict_3)
             if bool_4:
-                return True
+                return True, dict_4.keys()
             else:
                 bool_5, dict_5 = filter_5(df_nnlist=df_nnlist, dict_3=dict_3)
                 if bool_5:
-                    bool_6, N_ids = filter_6(df_nnlist=df_nnlist, dict_3=dict_3, central_atom_symbol=central_atom_symbol)
+                    bool_6, C_ids = filter_6(df_nnlist=df_nnlist, dict_3=dict_3, central_atom_symbol=central_atom_symbol)
                     if bool_6:
-                        return True
+                        return True, C_ids
                     else:
                         return False
                 else:
