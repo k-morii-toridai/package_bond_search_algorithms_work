@@ -205,7 +205,7 @@ def concat_filter(df_nnlist, central_atom_symbol, neighboring_atom_symbol, bond_
         if bool_3:
             bool_4, dict_4 = filter_4(df_nnlist=df_nnlist, dict_3=dict_3)
             if bool_4:
-                return True
+                return True, dict_4.keys()
             else:
                 bool_5, dict_5 = filter_5(df_nnlist=df_nnlist, dict_3=dict_3)
                 if bool_5:
